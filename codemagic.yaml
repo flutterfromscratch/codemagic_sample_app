@@ -55,7 +55,7 @@ workflows:
               - google_play # <-- (Includes GCLOUD_SERVICE_ACCOUNT_CREDENTIALS <-- Put your google-services.json)
           vars:
               PACKAGE_NAME: "com.domain.yourappname" # <-- Put your package name here e.g. com.domain.myapp
-      triggering:
+        triggering:
           events:
               - push
               - tag
@@ -64,7 +64,7 @@ workflows:
               - pattern: develop
                 include: true
                 source: true
-      scripts:
+        scripts:
           - name: Set up keystore
             script: |
                             echo $FCI_KEYSTORE | base64 --decode > /tmp/keystore.keystore            
@@ -72,9 +72,9 @@ workflows:
             script: |
               export NEW_BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks=alpha) + 1))
               python3 export_unity.py android                      
-      artifacts:
+        artifacts:
           - android/*.aab
-      publishing:
+        publishing:
           google_play:
             # See the following link for information regarding publishing to Google Play - https://docs.codemagic.io/publishing-yaml/distribution/#google-play
             credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
