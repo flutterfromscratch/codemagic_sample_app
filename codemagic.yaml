@@ -47,7 +47,7 @@ workflows:
     unity-android-workflow:
         name: Unity Android Workflow
         max_build_duration: 120
-        environment:
+      environment:
           groups:
           # Add the group environment variables in Codemagic UI (either in Application/Team variables) - https://docs.codemagic.io/variables/environment-variable-groups/
               - unity # <-- (Includes UNITY_HOME, UNITY_SERIAL, UNITY_USERNAME and UNITY_PASSWORD)
@@ -55,7 +55,7 @@ workflows:
               - google_play # <-- (Includes GCLOUD_SERVICE_ACCOUNT_CREDENTIALS <-- Put your google-services.json)
           vars:
               PACKAGE_NAME: "com.domain.yourappname" # <-- Put your package name here e.g. com.domain.myapp
-        triggering:
+      triggering:
           events:
               - push
               - tag
@@ -64,7 +64,7 @@ workflows:
               - pattern: develop
                 include: true
                 source: true
-        scripts:
+      scripts:
           - name: Set up keystore
             script: |
                             echo $FCI_KEYSTORE | base64 --decode > /tmp/keystore.keystore            
@@ -72,9 +72,9 @@ workflows:
             script: |
               export NEW_BUILD_NUMBER=$(($(google-play get-latest-build-number --package-name "$PACKAGE_NAME" --tracks=alpha) + 1))
               python3 export_unity.py android                      
-        artifacts:
+      artifacts:
           - android/*.aab
-        publishing:
+      publishing:
           google_play:
             # See the following link for information regarding publishing to Google Play - https://docs.codemagic.io/publishing-yaml/distribution/#google-play
             credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
@@ -91,4 +91,4 @@ workflows:
             python export_unity_fan.py windows
       artifacts:
         - windows/your_project_name.exe # <- update with the name of your project
-        - Logs/unity_build_*.log    
+        - Logs/unity_build_*.log
